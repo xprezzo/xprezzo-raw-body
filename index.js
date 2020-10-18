@@ -11,7 +11,7 @@
  * @private
  */
 
-const bytes = require('bytes')
+const bytes = require('xprezzo-bytes')
 const HttpRawStream = require('./lib/HttpRawStream')
 const createError = require('xprezzo-http-errors')
 const iconv = require('xprezzo-iconv')

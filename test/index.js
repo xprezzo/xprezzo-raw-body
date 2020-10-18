@@ -34,7 +34,7 @@ describe('Raw Body', () => {
   })
 
   it('should error for bad callback', () => {
-    assert.throws( () => {
+    assert.throws(() => {
       getRawBody(createStream(), true, 'silly')
     }, /argument callback.*function/)
   })
@@ -50,7 +50,7 @@ describe('Raw Body', () => {
   })
 
   it('should work when length=0', (done) => {
-    let stream = new EventEmitter()
+    const stream = new EventEmitter()
 
     getRawBody(stream, {
       length: 0,
@@ -61,7 +61,7 @@ describe('Raw Body', () => {
       done()
     })
 
-    process.nextTick( () => {
+    process.nextTick(() => {
       stream.emit('end')
     })
   })
@@ -114,7 +114,7 @@ describe('Raw Body', () => {
   })
 
   it('should work with an empty stream', (done) => {
-    let stream = new Readable()
+    const stream = new Readable()
     stream.push(null)
 
     getRawBody(stream, {
@@ -130,7 +130,7 @@ describe('Raw Body', () => {
   })
 
   it('should throw on empty string and incorrect length', (done) => {
-    let stream = new Readable()
+    const stream = new Readable()
     stream.push(null)
 
     getRawBody(stream, {
@@ -176,7 +176,7 @@ describe('Raw Body', () => {
   it('should work with {"test":"å"}', (done) => {
     // https://github.com/visionmedia/express/issues/1816
 
-    let stream = new Readable()
+    const stream = new Readable()
     stream.push('{"test":"å"}')
     stream.push(null)
 
@@ -191,7 +191,7 @@ describe('Raw Body', () => {
   })
 
   it('should throw if stream encoding is set', (done) => {
-    let stream = new Readable()
+    const stream = new Readable()
     stream.push('akl;sdjfklajsdfkljasdf')
     stream.push(null)
     stream.setEncoding('utf8')
@@ -203,7 +203,7 @@ describe('Raw Body', () => {
   })
 
   it('should throw when given an invalid encoding', (done) => {
-    let stream = new Readable()
+    const stream = new Readable()
     stream.push('akl;sdjfklajsdfkljasdf')
     stream.push(null)
 
@@ -217,11 +217,11 @@ describe('Raw Body', () => {
   })
 
   describe('with global Promise', () => {
-    before( () => {
+    before(() => {
       global.Promise = Promise
     })
 
-    after( () => {
+    after(() => {
       global.Promise = undefined
     })
 
@@ -241,16 +241,16 @@ describe('Raw Body', () => {
   })
 
   describe('without global Promise', () => {
-    before( () => {
+    before(() => {
       global.Promise = undefined
     })
 
-    after( () => {
+    after(() => {
       global.Promise = Promise
     })
 
     it('should error without callback', () => {
-      assert.throws( () => {
+      assert.throws(() => {
         getRawBody(createStream())
       }, /argument callback.*required/)
     })
@@ -276,7 +276,7 @@ describe('Raw Body', () => {
     it('should return a string', (done) => {
       getRawBody(createStream(), {
         encoding: 'utf-8'
-      },  (err, str) => {
+      }, (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
         done()
@@ -302,8 +302,8 @@ describe('Raw Body', () => {
     })
 
     it('should decode codepage string', (done) => {
-      let stream = createStream(Buffer.from('bf43f36d6f20657374e1733f', 'hex'))
-      let string = '¿Cómo estás?'
+      const stream = createStream(Buffer.from('bf43f36d6f20657374e1733f', 'hex'))
+      const string = '¿Cómo estás?'
       getRawBody(stream, 'iso-8859-1', (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
@@ -312,8 +312,8 @@ describe('Raw Body', () => {
     })
 
     it('should decode UTF-8 string', (done) => {
-      let stream = createStream(Buffer.from('c2bf43c3b36d6f20657374c3a1733f', 'hex'))
-      let string = '¿Cómo estás?'
+      const stream = createStream(Buffer.from('c2bf43c3b36d6f20657374c3a1733f', 'hex'))
+      const string = '¿Cómo estás?'
       getRawBody(stream, 'utf-8', (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
@@ -323,8 +323,8 @@ describe('Raw Body', () => {
 
     it('should decode UTF-16 string (LE BOM)', (done) => {
       // BOM makes this LE
-      let stream = createStream(Buffer.from('fffebf004300f3006d006f002000650073007400e10073003f00', 'hex'))
-      let string = '¿Cómo estás?'
+      const stream = createStream(Buffer.from('fffebf004300f3006d006f002000650073007400e10073003f00', 'hex'))
+      const string = '¿Cómo estás?'
       getRawBody(stream, 'utf-16', (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
@@ -334,8 +334,8 @@ describe('Raw Body', () => {
 
     it('should decode UTF-16 string (BE BOM)', (done) => {
       // BOM makes this BE
-      let stream = createStream(Buffer.from('feff00bf004300f3006d006f002000650073007400e10073003f', 'hex'))
-      let string = '¿Cómo estás?'
+      const stream = createStream(Buffer.from('feff00bf004300f3006d006f002000650073007400e10073003f', 'hex'))
+      const string = '¿Cómo estás?'
       getRawBody(stream, 'utf-16', (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
@@ -345,8 +345,8 @@ describe('Raw Body', () => {
 
     it('should decode UTF-16LE string', (done) => {
       // UTF-16LE is different from UTF-16 due to BOM behavior
-      let stream = createStream(Buffer.from('bf004300f3006d006f002000650073007400e10073003f00', 'hex'))
-      let string = '¿Cómo estás?'
+      const stream = createStream(Buffer.from('bf004300f3006d006f002000650073007400e10073003f00', 'hex'))
+      const string = '¿Cómo estás?'
       getRawBody(stream, 'utf-16le', (err, str) => {
         assert.ifError(err)
         assert.strictEqual(str, string)
@@ -355,7 +355,7 @@ describe('Raw Body', () => {
     })
 
     it('should correctly calculate the expected length', (done) => {
-      let stream = createStream(Buffer.from('{"test":"å"}'))
+      const stream = createStream(Buffer.from('{"test":"å"}'))
 
       getRawBody(stream, {
         encoding: 'utf-8',
@@ -365,7 +365,7 @@ describe('Raw Body', () => {
   })
 
   it('should work on streams1 stream', (done) => {
-    let stream = new EventEmitter()
+    const stream = new EventEmitter()
 
     getRawBody(stream, {
       encoding: true,
@@ -376,7 +376,7 @@ describe('Raw Body', () => {
       done()
     })
 
-    process.nextTick( () => {
+    process.nextTick(() => {
       stream.emit('data', 'foobar,')
       stream.emit('data', 'foobaz,')
       stream.emit('data', 'yay!!')
@@ -399,7 +399,7 @@ const checkString = (str) => {
 const createStream = (buf) => {
   if (!buf) return fs.createReadStream(file)
 
-  let stream = new Readable()
+  const stream = new Readable()
   stream._read = () => {
     stream.push(buf)
     stream.push(null)

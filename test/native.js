@@ -6,7 +6,7 @@ const run = Readable ? describe : describe.skip
 
 run('using native streams', () => {
   it('should read contents', (done) => {
-    let stream = createStream(Buffer.from('hello, streams!'))
+    const stream = createStream(Buffer.from('hello, streams!'))
 
     getRawBody(stream, (err, buf) => {
       assert.ifError(err)
@@ -16,7 +16,7 @@ run('using native streams', () => {
   })
 
   it('should read pre-buffered contents', (done) => {
-    let stream = createStream(Buffer.from('hello, streams!'))
+    const stream = createStream(Buffer.from('hello, streams!'))
     stream.push('oh, ')
 
     getRawBody(stream, (err, buf) => {
@@ -27,7 +27,7 @@ run('using native streams', () => {
   })
 
   it('should stop the stream on limit', (done) => {
-    let stream = createStream(Buffer.from('hello, streams!'))
+    const stream = createStream(Buffer.from('hello, streams!'))
 
     getRawBody(stream, { limit: 2 }, (err, buf) => {
       assert.ok(err)
@@ -39,7 +39,7 @@ run('using native streams', () => {
 })
 
 const createStream = (buf) => {
-  let stream = new Readable()
+  const stream = new Readable()
   stream._read = () => {
     stream.push(buf)
     stream.push(null)

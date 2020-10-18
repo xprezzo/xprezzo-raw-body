@@ -13,7 +13,7 @@ global.Promise = global.Promise
 describe('stream flowing', () => {
   describe('when limit lower then length', (done) => {
     it('should stop the steam flow', (done) => {
-      let stream = createInfiniteStream()
+      const stream = createInfiniteStream()
 
       getRawBody(stream, {
         limit: defaultLimit,
@@ -33,8 +33,8 @@ describe('stream flowing', () => {
     })
 
     it('should halt flowing stream', (done) => {
-      let stream = createInfiniteStream(true)
-      let dest = createBlackholeStream()
+      const stream = createInfiniteStream(true)
+      const dest = createBlackholeStream()
 
       // pipe the stream
       stream.pipe(dest)
@@ -56,7 +56,7 @@ describe('stream flowing', () => {
 
   describe('when stream has encoding set', (done) => {
     it('should stop the steam flow', (done) => {
-      let stream = createInfiniteStream()
+      const stream = createInfiniteStream()
       stream.setEncoding('utf8')
 
       getRawBody(stream, {
@@ -75,7 +75,7 @@ describe('stream flowing', () => {
 
   describe('when stream has limit', (done) => {
     it('should stop the steam flow', (done) => {
-      let stream = createInfiniteStream()
+      const stream = createInfiniteStream()
 
       getRawBody(stream, {
         limit: defaultLimit
@@ -94,7 +94,7 @@ describe('stream flowing', () => {
 
   describe('when stream has limit', (done) => {
     it('should stop the steam flow', (done) => {
-      let stream = createInfiniteStream()
+      const stream = createInfiniteStream()
 
       getRawBody(stream, (err, body) => {
         assert.ok(err)
@@ -104,7 +104,7 @@ describe('stream flowing', () => {
         done()
       })
 
-      setTimeout( () => {
+      setTimeout(() => {
         stream.emit('error', new Error('BOOM'))
       }, 500)
     })
@@ -116,13 +116,13 @@ const repeat = (str, num) => {
 }
 
 const createChunk = () => {
-  let base = Math.random().toString(32)
-  let KB_4 = 32 * 4
-  let KB_8 = KB_4 * 2
-  let KB_16 = KB_8 * 2
-  let KB_64 = KB_16 * 4
+  const base = Math.random().toString(32)
+  const KB_4 = 32 * 4
+  const KB_8 = KB_4 * 2
+  const KB_16 = KB_8 * 2
+  const KB_64 = KB_16 * 4
 
-  let rand = Math.random()
+  const rand = Math.random()
   if (rand < 0.25) {
     return repeat(base, KB_4)
   } else if (rand < 0.5) {
@@ -132,11 +132,10 @@ const createChunk = () => {
   } else {
     return repeat(base, KB_64)
   }
-
 }
 
 const createBlackholeStream = () => {
-  let stream = new Writable()
+  const stream = new Writable()
   stream._write = (chunk, encoding, cb) => {
     cb()
   }
@@ -145,11 +144,11 @@ const createBlackholeStream = () => {
 }
 
 const createInfiniteStream = (paused) => {
-  let stream = new Readable()
+  const stream = new Readable()
   stream._read = () => {
-    let rand = 2 + Math.floor(Math.random() * 10)
+    const rand = 2 + Math.floor(Math.random() * 10)
 
-    setTimeout( () => {
+    setTimeout(() => {
       for (let i = 0; i < rand; i++) {
         stream.push(createChunk())
       }

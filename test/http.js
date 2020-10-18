@@ -5,7 +5,7 @@ const net = require('net')
 
 describe('using http streams', () => {
   it('should read body streams', (done) => {
-    let server = http.createServer( (req, res) => {
+    const server = http.createServer((req, res) => {
       getRawBody(req, { length: req.headers['content-length'] }, (err, body) => {
         if (err) {
           req.resume()
@@ -17,15 +17,15 @@ describe('using http streams', () => {
       })
     })
 
-    server.listen( () => {
-      let addr = server.address()
-      let client = http.request({ method: 'POST', port: addr.port })
+    server.listen(() => {
+      const addr = server.address()
+      const client = http.request({ method: 'POST', port: addr.port })
 
       client.end('hello, world!')
 
       client.on('response', (res) => {
         getRawBody(res, { encoding: true }, (err, str) => {
-          server.close( () => {
+          server.close(() => {
             assert.ifError(err)
             assert.strictEqual(str, 'hello, world!')
             done()
@@ -36,7 +36,7 @@ describe('using http streams', () => {
   })
 
   it('should throw if stream encoding is set', (done) => {
-    let server = http.createServer( (req, res) => {
+    const server = http.createServer((req, res) => {
       req.setEncoding('utf8')
       getRawBody(req, { length: req.headers['content-length'] }, (err, body) => {
         if (err) {
@@ -49,15 +49,15 @@ describe('using http streams', () => {
       })
     })
 
-    server.listen( () => {
-      let addr = server.address()
-      let client = http.request({ method: 'POST', port: addr.port })
+    server.listen(() => {
+      const addr = server.address()
+      const client = http.request({ method: 'POST', port: addr.port })
 
       client.end('hello, world!')
 
-      client.on('response',  (res) => {
+      client.on('response', (res) => {
         getRawBody(res, { encoding: true }, (err, str) => {
-          server.close( () => {
+          server.close(() => {
             assert.ifError(err)
             assert.strictEqual(str, 'stream encoding should not be set')
             done()
@@ -69,7 +69,7 @@ describe('using http streams', () => {
 
   it('should throw if connection ends', (done) => {
     let socket
-    let server = http.createServer( (req, res) => {
+    const server = http.createServer((req, res) => {
       getRawBody(req, { length: req.headers['content-length'] }, (err, body) => {
         server.close()
         assert.ok(err)
@@ -85,7 +85,7 @@ describe('using http streams', () => {
       setTimeout(socket.destroy.bind(socket), 10)
     })
 
-    server.listen( () => {
+    server.listen(() => {
       socket = net.connect(server.address().port, () => {
         socket.write('POST / HTTP/1.0\r\n')
         socket.write('Connection: keep-alive\r\n')
